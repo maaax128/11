@@ -1,5 +1,6 @@
 <?php
 session_start();
+
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -30,7 +31,6 @@ session_start();
 		<input class="submit" type="submit" name="" value="Выйти">
 	</form>
 
-
 	<table>
     <tr>
         <th>Дата</th>
@@ -55,6 +55,7 @@ $assignedUserList = $pdo->prepare("SELECT id, login FROM user");
 $assignedUserList->execute();
 $assignedUserList = $assignedUserList->fetchAll(PDO::FETCH_ASSOC);  
 foreach ($sth as $value) {
+ $_SESSION['id'] = $value ['id'];
 ?>	
 <tr>		  
   <td><?php echo date("d-m-Y", strtotime($value['date_added'])) ?></td>
@@ -69,15 +70,13 @@ foreach ($sth as $value) {
   		<span style="color:green">завершено </span>
   		<?php
   	} ?>
-  	<form action="changeStatus.php" method="post" enctype="">
-	  	<input type="hidden" name="task_id" value="<?=$value['id']?>">
+  	<form action="changeStatus.php" method="post" enctype="">	  	
 	  	<input type="submit" name="" value="изменить статус">
 	</form>	
   </td>
   <td><?= $value['assigned_user_id'] ?></td>
   <td>
-  	<form  action="transfer.php" method="post" enctype="">
-  		<input type="hidden" name="task_id" value="<?=$value['id']?>">
+  	<form  action="transfer.php" method="post" enctype="">  		
   		<select name="assigned_user_id">
   			<?php 
 			foreach ($assignedUserList as $assignedUser) { ?>
@@ -93,8 +92,7 @@ foreach ($sth as $value) {
   	</form>
    </td>
    <td>
-   	<form action="delete.php" method="post" enctype="">
-  		<input type="hidden" name="task_id" value="<?=$value['id']?>">
+   	<form action="delete.php" method="post" enctype="">  		
 	  	<input type="submit" name="" value="удалить">
 	</form>
    </td>
@@ -108,7 +106,6 @@ $sth = $pdo->prepare("SELECT is_done, COUNT(*) as status FROM task WHERE user_id
 $sth->execute();
 $sth = $sth->fetchAll(PDO::FETCH_ASSOC);
 $statusTask = array_combine(array_column($sth, 'is_done'),array_column($sth, 'status'));
-var_dump($statusTask);
 if (array_key_exists(1, $statusTask)) {
 	$executedTask=$statusTask[1];
 } else {
