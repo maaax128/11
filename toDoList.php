@@ -10,9 +10,6 @@ session_start();
 </head>
 <body>
 	<form class="f1" action="actionAddBusiness.php" method="post" enctype="multipart/form-data">
-		<input class="input" type="hidden" name="user_id" value="<?= $_SESSION['user_id'] ?>">
-		<input class="input" type="hidden" name="assigned_user_id" value="<?= $_SESSION['user_id'] ?>">
-		<input class="input" type="hidden" name="is_done" value="0">
 		<input class="input" type="date" name="date">
 		<input class="input" type="text" name="description" placeholder="Описание дела">
 		<input class="submit" type="submit" name="" value="Добавить">
@@ -26,7 +23,6 @@ session_start();
 		</select>
 		<input class="submit" type="submit" name="s" value="Сортировать">
 	</form>
-
 	<form class="f2" action="exit.php" method="post" enctype="multipart/form-data">
 		<input class="submit" type="submit" name="" value="Выйти">
 	</form>
@@ -70,13 +66,15 @@ foreach ($sth as $value) {
   		<span style="color:green">завершено </span>
   		<?php
   	} ?>
-  	<form action="changeStatus.php" method="post" enctype="">	  	
+ <form action="changeStatus.php" method="post" enctype="">
+	  	<input type="hidden" name="task_id" value="<?=$value['id']?>">
 	  	<input type="submit" name="" value="изменить статус">
 	</form>	
   </td>
   <td><?= $value['assigned_user_id'] ?></td>
   <td>
-  	<form  action="transfer.php" method="post" enctype="">  		
+  	<form  action="transfer.php" method="post" enctype="">
+  		<input type="hidden" name="task_id" value="<?=$value['id']?>">
   		<select name="assigned_user_id">
   			<?php 
 			foreach ($assignedUserList as $assignedUser) { ?>
@@ -92,7 +90,8 @@ foreach ($sth as $value) {
   	</form>
    </td>
    <td>
-   	<form action="delete.php" method="post" enctype="">  		
+   	<form action="delete.php" method="post" enctype="">
+  		<input type="hidden" name="task_id" value="<?=$value['id']?>">
 	  	<input type="submit" name="" value="удалить">
 	</form>
    </td>
